@@ -7,10 +7,10 @@ const {variables,chromeOptions,chromeOptions2} = require('./utils.js');
 let datos= [];
 const formatearPrecio = (precio)=> precio.replace(/[^0-9,.]+/g, "").replace(/[,.]+/g, "");
 
-
+app.use(cors());
 app.use(express.json());
 app.use(express.text());
-app.use(cors());
+
 
 app.get('/test',(req,res)=>{
     console.log("Buscando Precios desde test");
