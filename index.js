@@ -60,7 +60,7 @@ app.get('/',(req,res)=>{
 //        }catch (error) {
 //         console.log(error);
 //     }
-}
+//}
 
 // let allPromise = Promise.all([scrapearRipleyPS5()]);
 app.listen(7000, function() {console.log("App Corriendo en el puerto 4000");});
