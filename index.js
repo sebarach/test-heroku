@@ -2,8 +2,9 @@ const express = require('express')
 const cors = require('cors');
 const fetch = require('node-fetch');
 const cheerio = require("cheerio");
+const puppeteer = require('puppeteer');
 const app = express();
-const {variables} = require('./utils.js')
+const {variables,chromeOptions,chromeOptions2} = require('./utils.js')
 let datos= [];
 const formatearPrecio = (precio)=> precio.replace(/[^0-9,.]+/g, "").replace(/[,.]+/g, "");
 
@@ -23,11 +24,31 @@ app.get('/test',(req,res)=>{
         });
       });
 
+    async function scrapearProMovilPS5() {
+    try {
+    let browser = await puppeteer.launch();
+    let page = await browser.newPage();
+    await page.goto(variables.urlProMovilExport,{chromeOptions});
+    let text = await page.evaluate(() => {
+        return document.querySelector('#main > div:nth-child(2) > div.col-md-7 > div.product-prices > div.product-price.h5.has-discount > div > span:nth-child(1)').innerText;
+    });
+    await page.close();
+    await browser.close();
+    datos.push({ url: variables.urlProMovilExport, precio: text, precioParse: formatearPrecio(text),tienda:"Pro Movil" });  
+    } catch(error) {
+        datos.push({ url: variables.urlProMovilExport, precio: 0, precioParse: 0,tienda:"Pro Movil" }); 
+        console.log(error); 
+        await page.close();
+        await browser.close();
+    }
+}
+
 
 async function scrapearRipleyPS5() {
     try {
         let data = await fetch(variables.urlRipleyExport);
-        let $ = cheerio.load(await data.text());
+        let response = await data.text()
+        let $ = cheerio.load(response);
         let precio = $('#row > div.col-xs-12.col-sm-12.col-md-5 > section.product-info > dl > div.product-price-container.product-internet-price-not-best > dt').first().text();
         datos.push({ url:variables.urlRipleyExport, precio: precio, precioParse: formatearPrecio(precio),tienda:"Ripley" });
        }catch (error) {
@@ -35,12 +56,7 @@ async function scrapearRipleyPS5() {
     }
 }
 
-
-
-
-let allPromise = Promise.all([scrapearRipleyPS5()]);
-
-
+let allPromise = Promise.all([scrapearRipleyPS5(),scrapearProMovilPS5()]);
 app.listen(4000, function() {console.log("App Corriendo en el puerto 4000");});
 
 
