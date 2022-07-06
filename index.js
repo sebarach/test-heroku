@@ -2,7 +2,6 @@ const express = require('express')
 const cors = require('cors');
 const cheerio = require("cheerio");
 const axios = require("axios");
-const puppeteer = require('puppeteer');
 const app = express();
 const {variables,chromeOptions,chromeOptions2} = require('./utils.js');
 let datos= [];
