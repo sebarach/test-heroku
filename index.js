@@ -25,22 +25,22 @@ app.get('/test',(req,res)=>{
       });
 
     async function scrapearProMovilPS5() {
-    try {
-    let browser = await puppeteer.launch();
-    let page = await browser.newPage();
-    await page.goto(variables.urlProMovilExport,{chromeOptions});
-    let text = await page.evaluate(() => {
-        return document.querySelector('#main > div:nth-child(2) > div.col-md-7 > div.product-prices > div.product-price.h5.has-discount > div > span:nth-child(1)').innerText;
-    });
-    await page.close();
-    await browser.close();
-    datos.push({ url: variables.urlProMovilExport, precio: text, precioParse: formatearPrecio(text),tienda:"Pro Movil" });  
-    } catch(error) {
-        datos.push({ url: variables.urlProMovilExport, precio: 0, precioParse: 0,tienda:"Pro Movil" }); 
-        console.log(error); 
-        await page.close();
-        await browser.close();
-    }
+    // try {
+    // let browser = await puppeteer.launch();
+    // let page = await browser.newPage();
+    // await page.goto(variables.urlProMovilExport,{chromeOptions});
+    // let text = await page.evaluate(() => {
+    //     return document.querySelector('#main > div:nth-child(2) > div.col-md-7 > div.product-prices > div.product-price.h5.has-discount > div > span:nth-child(1)').innerText;
+    // });
+    // await page.close();
+    // await browser.close();
+    // datos.push({ url: variables.urlProMovilExport, precio: text, precioParse: formatearPrecio(text),tienda:"Pro Movil" });  
+    // } catch(error) {
+    //     datos.push({ url: variables.urlProMovilExport, precio: 0, precioParse: 0,tienda:"Pro Movil" }); 
+    //     console.log(error); 
+    //     await page.close();
+    //     await browser.close();
+    // }
 }
 
 
