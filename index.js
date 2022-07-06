@@ -9,7 +9,7 @@ const { response } = require('express');
 let datos= [];
 const formatearPrecio = (precio)=> precio.replace(/[^0-9,.]+/g, "").replace(/[,.]+/g, "");
 
-//app.use(cors());
+app.use(cors());
 app.use(express.json());
 
 
@@ -26,6 +26,7 @@ app.use(express.json());
 
 
 app.get('/',(req,res)=>{
+    console.log("entra");
         res.send("funciona");
       });
 
@@ -61,7 +62,7 @@ async function scrapearRipleyPS5() {
     }
 }
 
-let allPromise = Promise.all([scrapearRipleyPS5(),scrapearProMovilPS5()]);
+let allPromise = Promise.all([scrapearRipleyPS5()]);
 app.listen(4000, function() {console.log("App Corriendo en el puerto 4000");});
 
 
