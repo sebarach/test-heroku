@@ -62,7 +62,8 @@ app.get('/',(req,res)=>{
 //     }
 //}
 
+const puerto = 3000;
 // let allPromise = Promise.all([scrapearRipleyPS5()]);
-app.listen(7000, function() {console.log("App Corriendo en el puerto 4000");});
+app.listen(puerto, function() {console.log(`App Corriendo en el puerto ${puerto}`);});
 
 
