@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors');
 const fetch = require('node-fetch');
 const cheerio = require("cheerio");
+const axios = require("axios");
 //const puppeteer = require('puppeteer');
 const app = express();
 const {variables,chromeOptions,chromeOptions2} = require('./utils.js');
@@ -30,31 +31,24 @@ app.get('/',(req,res)=>{
         res.send("funciona");
       });
 
-    async function scrapearProMovilPS5() {
-    // try {
-    // let browser = await puppeteer.launch();
-    // let page = await browser.newPage();
-    // await page.goto(variables.urlProMovilExport,{chromeOptions});
-    // let text = await page.evaluate(() => {
-    //     return document.querySelector('#main > div:nth-child(2) > div.col-md-7 > div.product-prices > div.product-price.h5.has-discount > div > span:nth-child(1)').innerText;
-    // });
-    // await page.close();
-    // await browser.close();
-    // datos.push({ url: variables.urlProMovilExport, precio: text, precioParse: formatearPrecio(text),tienda:"Pro Movil" });  
-    // } catch(error) {
-    //     datos.push({ url: variables.urlProMovilExport, precio: 0, precioParse: 0,tienda:"Pro Movil" }); 
-    //     console.log(error); 
-    //     await page.close();
-    //     await browser.close();
-    // }
-}
+      async function scrapearGoldenGamerPS5() {
+        try {
+            let { data } = await axios.get(variables.urlGoldenGamerExport);
+            let $ = cheerio.load(data);
+            let precio = $('#ProductPrice-product-template > span').first().text();
+            datos.push({ url: variables.urlGoldenGamerExport, precio: precio, precioParse: formatearPrecio(precio),tienda:"Golden Gamer" });
+        } catch (error) {
+            console.log(error);
+        }
+    
+    }
 
 
 async function scrapearRipleyPS5() {
     try {
         let data = await fetch(variables.urlRipleyExport);
-        let response = await data.text()
-        let $ = cheerio.load(response);
+        let body = await data.text();
+        let $ = cheerio.load(body);
         let precio = $('#row > div.col-xs-12.col-sm-12.col-md-5 > section.product-info > dl > div.product-price-container.product-internet-price-not-best > dt').first().text();
         datos.push({ url:variables.urlRipleyExport, precio: precio, precioParse: formatearPrecio(precio),tienda:"Ripley" });
        }catch (error) {
@@ -63,7 +57,7 @@ async function scrapearRipleyPS5() {
 }
 
 const puerto = 3000;
-let allPromise = Promise.all([scrapearRipleyPS5()]);
+let allPromise = Promise.all([scrapearRipleyPS5(),scrapearGoldenGamerPS5()]);
 app.listen(process.env.PORT || 3000, function() {console.log(`App Corriendo en el puerto ${puerto}`);});
 
 
