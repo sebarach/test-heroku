@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors');
 const cheerio = require("cheerio");
 const axios = require("axios");
+var cookieParser = require('cookie-parser')
 const app = express();
 const {variables,chromeOptions,chromeOptions2} = require('./utils.js');
 let datos= [];
